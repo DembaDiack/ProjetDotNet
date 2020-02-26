@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import Cookies from "universal-cookie";
+import auth from "../Auth/Auth";
+import Auth from "../Auth/Auth";
 
 const Login = ()=>{
-  const cookies = new Cookies();
 
   const alert = (message,color) => (<div role="alert" className={`alert alert-success ${color} border-danger`} style={{maxWidth: '550px'}}>
     <span><strong>Alert</strong>{message}</span></div>)
@@ -42,8 +42,8 @@ const Login = ()=>{
                 alert : false,
                 alertMessage : alert("Connecte aves succes","bg-success")
             });
-            cookies.set("connected",true);
-            console.log(cookies.get("connected"));
+            const auth = new Auth();
+            console.log(auth.connect(state.email).checkConnection());
         }
         else{
           setState({

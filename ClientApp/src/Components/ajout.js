@@ -89,7 +89,7 @@ const Ajout = ()=>{
             </div>
             <div className="col-md-7">
             <Link to={`/produit/${state.matricule}`}>
-            <img className="img-fluid" src={state.image} alt={"produit"}/>
+            <img className="img-fluid" src={state.image}/>
             </Link>
             </div>
             </div>

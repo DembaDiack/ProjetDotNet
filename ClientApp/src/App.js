@@ -6,6 +6,7 @@ import Ajout from "./Components/ajout";
 import Products from "./Components/product";
 import Navbar from './Components/NavBar';
 import Modif from "./Components/Modif";
+import Auth from "./Auth/Auth";
 
 function App() {
   return (
