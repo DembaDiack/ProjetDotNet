@@ -164,7 +164,17 @@ namespace WebApplication1.Models
             });
             return result.ToJson();
         }
-
+        public async Task<string> editAccount(Account account){
+            var filter = Builders<BsonDocument>.Filter.Eq("email",account.email);
+            var hashedPassword = Crypto.HashPassword(account.password);
+            var result = await getCollection().FindOneAndUpdateAsync(filter,new BsonDocument(){
+                {"email",account.email},
+                {"password",hashedPassword},
+            });
+            Console.WriteLine(result);
+            Console.Write("affected rows " + result.Count());
+            return result.ToJson();
+        }
         public async Task<string> findProductByMatriculeAsync(int matricule){
             Console.WriteLine(matricule);
             var filter = Builders<BsonDocument>.Filter.Eq("matricule",matricule);
@@ -176,10 +186,10 @@ namespace WebApplication1.Models
         public async Task<List<Product>> findProduct(string query){
             List<Product> all = new List<Product>();
             var builder = Builders<BsonDocument>.Filter;
-            var pattern = new BsonRegularExpression(query);
+            var pattern = new BsonRegularExpression(query,"i");
             var emailFilter = builder.Regex("email",pattern);
             var nameFilter = builder.Regex("nom",pattern);
-            var matriculeFilter = builder.Regex("matricule",pattern);
+            var matriculeFilter = builder.Regex("matricule",new BsonRegularExpression(query,"i"));
             var combinedOr = builder.Or(matriculeFilter | emailFilter | nameFilter);
             var count = await getCollection("produits").Find(combinedOr).CountAsync();
             Console.WriteLine(count);

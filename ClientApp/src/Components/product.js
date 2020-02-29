@@ -1,6 +1,4 @@
 import React, { useState,useEffect } from "react";
-import Navbar from "./NavBar";
-import {Link} from "react-router-dom";
 import Product from "./productComp";
 import axios from "axios";
 import Search from "./searchBar";
@@ -11,12 +9,15 @@ const Products = () => {
     }
     const [state,setState] = useState(initialState);
     const loadProducts = (query = null)=>{
-        console.log("herererererrere : ",query);
-        let link = "/api/products";
-        if(query !== null || query !== ""){
+        let link;
+        if(query === null || query === "" || query === "null"){
+            link = "/api/products";   
+        }
+        else{
             link = `/api/search?q=${query}`;
         }
-        axios.get(link)
+        console.log(link);
+        return axios.get(link)
         .then(result => {
             const tab = result.data.map(elem => {
                 return <Product 
@@ -35,6 +36,7 @@ const Products = () => {
                 ...state,
                 Products : tab
             })
+            return true;
         })
         .catch(err => {
             console.log(err);
@@ -42,11 +44,11 @@ const Products = () => {
     };
 
     useEffect(()=>{
-        console.log("products",state.Products);
         if(state.Products.length <= 0 ){
             loadProducts();
         }
     },[]);
+
     return (
         <div>
             <div className="container">

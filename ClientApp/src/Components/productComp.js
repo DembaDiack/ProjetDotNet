@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
+import Auth from "../Auth/Auth";
 
 const Product = (props) => {
+    const auth = new Auth();
+    const email = auth.getEmail();
+    const email_verif = email;
+
     const [state,setState] = useState({
         ...props
     })
     const handleDim = id => {
+        if(state.email !== email_verif){
+            return;
+        }
         if(state.quantite !== 0 ){
             const newQuantite = state.quantite - 1;
             setState({
@@ -23,6 +31,7 @@ const Product = (props) => {
             })
             .then(result => {
                 console.log(result);
+                
             })
             .catch(err => {
                 console.log(err);
@@ -30,6 +39,9 @@ const Product = (props) => {
         }
     }
     const handleSupp = id => {
+        if(state.email !== email_verif){
+            return;
+        }
         axios.post("/api/delete",{
             matricule : state.matricule,
             email : state.email,
@@ -39,7 +51,7 @@ const Product = (props) => {
         })
         .then(result => {
             console.log(result);
-            state.loadProducts();
+            state.loadProducts(null);
         })
         .catch(err => {
             console.log(err);

@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
 import axios from "axios";
-import auth from "../Auth/Auth";
 import Auth from "../Auth/Auth";
 
 const Login = ()=>{
-
+  // const history = useHistory();
   const alert = (message,color) => (<div role="alert" className={`alert alert-success ${color} border-danger`} style={{maxWidth: '550px'}}>
     <span><strong>Alert</strong>{message}</span></div>)
 
   const initialState = {
     email : "",
     password : "",
-    alert : 1,
+    alert : false,
     alertMessage : null,
   }
   const [state,setState] = useState(initialState);
@@ -44,6 +43,9 @@ const Login = ()=>{
             });
             const auth = new Auth();
             console.log(auth.connect(state.email).checkConnection());
+            setTimeout(()=>{
+              // history.push("/liste");
+            },500);
         }
         else{
           setState({
@@ -80,6 +82,7 @@ const Login = ()=>{
         <small>Entrez votre email et mot de passe ici sil vous plait</small>
         <button className="btn btn-primary btn-block" type="submit" style={{height: '50px', borderRadius: '5px', marginBottom: '8px', marginTop: '8px', maxWidth: '550px'}}>Button</button>
           <Link to="/signup">Ou creer un compte ici.</Link>
+          <Link to="/change" className="ml-2">Changer de mot de passe.</Link>
         </form>
       </div>
         </div>

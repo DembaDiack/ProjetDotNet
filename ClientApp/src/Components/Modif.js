@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useParams,Link } from "react-router-dom";
+import Auth from "../Auth/Auth";
 
 const Modif = (props)=>{
     const alert = (message,color) => (<div role="alert" className={`alert alert-success ${color} border-danger`} style={{maxWidth: '550px'}}>
     <span><strong>Alert</strong>{message}</span></div>)
+    const auth = new Auth();
+    const email = auth.getEmail();
 
     const initialState = {
         matricule : "",
@@ -15,7 +18,7 @@ const Modif = (props)=>{
         prix : 0
     }
     const initialAlertState = {
-        alert : 1,
+        alert : false,
         alertMessage : null
     }
     const [state,setState] = useState(initialState);
@@ -45,15 +48,29 @@ const Modif = (props)=>{
     }
     const handlerSubmit = event => {
         event.preventDefault();
-        Axios.post("/api/edit",{
-            ...state
-        })
-        .then(result => {
-            console.log("post data result : ", result);
-        })
-        .catch(err => {
-            console.log("post request error : ",err);
-        });
+        if(email !== state.email){
+            setAlertState({
+                ...alertState,
+                alert : true,
+                alertMessage : alert("ceci nest pas votre produit, veuillez vous connecter au compte correspondant svp","bg-warning")
+            });
+        }else{
+            Axios.post("/api/edit",{
+                ...state
+            })
+            .then(result => {
+                console.log("post data result : ", result);
+                setAlertState({
+                    ...alertState,
+                    alert : true,
+                    alertMessage : alert("produit modifier avec success","bg-success")
+                });
+            })
+            .catch(err => {
+                console.log("post request error : ",err);
+            });
+        }
+        
     }
 
     const handleImage = img => {

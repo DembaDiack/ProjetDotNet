@@ -10,18 +10,15 @@ class Auth{
         this.checkConnection();
         return this;
     }
-    checkConnection(){
+    checkConnection(callback){
         if(this.email !== undefined){
-            this.email = crypto.AES.decrypt(this.email,this.pass).toString();
+            this.email = crypto.AES.decrypt(this.email,this.pass).toString(crypto.enc.Utf8);
             this.connected = true;
         }
         else{
             this.connected = false;
         }
-        return {
-            email : this.email,
-            connected : this.connected
-        };
+        console.log("call back msg : ",callback);
     }
     connect(email){
         this.email = crypto.AES.encrypt(email,this.pass).toString();
@@ -31,6 +28,13 @@ class Auth{
     disconnect(){
         this.cookies.remove("email");
         return this;
+    }
+    getEmail(){
+        return this.email;
+    }
+    isConnected()
+    {
+        return this.connected;
     }
 }
 
