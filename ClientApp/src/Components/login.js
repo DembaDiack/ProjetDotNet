@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import {Link} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {Link,useHistory} from "react-router-dom";
 import axios from "axios";
 import Auth from "../Auth/Auth";
 
 const Login = ()=>{
-  // const history = useHistory();
+  const auth = new Auth();
+  const history = useHistory();
   const alert = (message,color) => (<div role="alert" className={`alert alert-success ${color} border-danger`} style={{maxWidth: '550px'}}>
-    <span><strong>Alert</strong>{message}</span></div>)
-
+    <span><strong>Alert : </strong>{message}</span></div>)
   const initialState = {
     email : "",
     password : "",
@@ -15,6 +15,17 @@ const Login = ()=>{
     alertMessage : null,
   }
   const [state,setState] = useState(initialState);
+
+
+  useEffect(()=>{
+    if(auth.isConnected()){
+      setState({
+        ...state,
+        alert : false,
+        alertMessage : alert("vous etes deja connecte","bg-alert")
+    });
+    }
+  },[])
 
   const handleChange = event => {
     setState({
@@ -41,10 +52,10 @@ const Login = ()=>{
                 alert : false,
                 alertMessage : alert("Connecte aves succes","bg-success")
             });
-            const auth = new Auth();
+            
             console.log(auth.connect(state.email).checkConnection());
             setTimeout(()=>{
-              // history.push("/liste");
+              history.push("/liste");
             },500);
         }
         else{
