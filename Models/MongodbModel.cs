@@ -60,19 +60,11 @@ namespace WebApplication1.Models
         {
             var filter = Builders<BsonDocument>.Filter.Eq("email",email);
             var count = await getCollection().Find(filter).CountAsync();
-            
-            System.Diagnostics.Debug.WriteLine("---------------------------------------------------------");
-            System.Diagnostics.Debug.WriteLine(email);
-            System.Diagnostics.Debug.WriteLine(email);
             if (count >= 1)
             {
                 var result = await getCollection().Find(filter).FirstAsync();
                 Account account = BsonSerializer.Deserialize<Account>(result);
                 bool check = Crypto.VerifyHashedPassword(account.password, password);
-                System.Diagnostics.Debug.WriteLine(check);
-                System.Diagnostics.Debug.WriteLine(account);
-                System.Diagnostics.Debug.WriteLine(password);
-                System.Diagnostics.Debug.WriteLine(account.password);
                 if (check)
                 {
                     return true;
